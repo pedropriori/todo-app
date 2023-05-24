@@ -4,7 +4,7 @@ const getAllTasks = () => {
     return prisma.tasks.findMany();
 }
 
-const getTasksById = (id) => {
+const getTaskById = (id) => {
     return prisma.tasks.findFirst({
         where: {
             id: id
@@ -12,13 +12,13 @@ const getTasksById = (id) => {
     })
 }
 
-const saveTasks = (task) => {
+const saveTask = (task) => {
     return prisma.tasks.create({
         data: task
     })
 }
 
-const updateTasks = (id, task) => {
+const updateTask = (id, task) => {
     return prisma.tasks.update({
         where: {
             id: id
@@ -27,7 +27,7 @@ const updateTasks = (id, task) => {
     })
 }
 
-const deleteTasks = (id) => {
+const deleteTask = (id) => {
     return prisma.tasks.delete({
         where: {
             id: id
@@ -36,9 +36,9 @@ const deleteTasks = (id) => {
 }
 
 module.exports = {
-    saveTasks,
+    saveTask,
     getAllTasks,
-    getTasksById,
-    updateTasks,
-    deleteTasks
+    getTaskById,
+    updateTask,
+    deleteTask
 }
