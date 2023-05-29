@@ -2,6 +2,8 @@ const express = require("express");
 const { saveTask, getAllTasks, getTaskById, updateTask, deleteTask } = require("../database/tasks");
 const auth = require("../middleware/auth");
 const router = express.Router();
+const { taskSchema } = require("../schema/task");
+const { tasks } = require("../database/prisma");
 
 
 router.get("/tasks", auth, async (req, res) => {
@@ -21,24 +23,22 @@ router.get("/tasks/:id", auth, async (req, res) => {
 })
 
 router.post("/tasks", auth, async (req, res) => {
-    const newTask = {
-        nome: req.body.name,
-        descricao: req.body.descricao,
-        isDone: req.body.isDone
-    }
-    const savedTask = await saveTask(newTask)
-    res.json({
-        task: saveTask
+    try {
+        const newTask = taskSchema.parse(req.body);
+        const savedTask = await saveTask(newTask)
+        res.json({
+            task: saveTask
     })
+    } catch(err) {
+        res.status(500).json({
+            message: "Server error."
+        })
+    }
 })
 
 router.put("/tasks/:id", auth, async (req, res) => {
     const id = Number(req.params.id);
-    const task = {
-        nome: req.body.name,
-        descricao: req.body.descricao,
-        isDone: req.body.isDone
-    }
+    const task = taskSchema.parse(req.body);
     const updateTask = await updateTask(id, task);
     res.json({
         task: updateTask
